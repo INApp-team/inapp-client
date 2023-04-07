@@ -7,6 +7,7 @@ import { Select } from "ui";
 import { DEFAULT_BORDER } from "constants/styles/borders";
 import { EN, RU } from "constants/langs";
 import useLangStore from "store/langStore";
+import { white } from "../../constants/styles/colors";
 
 const Header: FC = () => {
     const { logout } = useAuthStore((state) => state);
@@ -19,7 +20,9 @@ const Header: FC = () => {
                 <div className="flex justify-between items-center cursor-pointer">
                     <div className="flex">
                         <img src={chatIcon} className="mr-[10px] h-10" alt="INApp logo" />
-                        <span className="self-center text-2xl font-semibold whitespace-nowrap text-white">
+                        <span
+                            className={`self-center text-2xl font-semibold whitespace-nowrap ${white}`}
+                        >
                             INApp
                         </span>
                     </div>

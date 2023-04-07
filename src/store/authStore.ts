@@ -1,4 +1,4 @@
-import { IAuthResponse, IUser } from "interfaces";
+import { IAuthResponse, IUser } from "typization/interfaces";
 import axios from "axios";
 import $api from "../http";
 import { API_URL } from "http/urls";

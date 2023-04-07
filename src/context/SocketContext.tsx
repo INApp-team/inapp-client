@@ -1,55 +1,19 @@
 import { createContext, useEffect, useRef, useState } from "react";
-import Peer, { SignalData } from "simple-peer";
+import Peer from "simple-peer";
 import * as io from "socket.io-client";
-import { IMsg } from "interfaces";
+import { IMsg } from "typization/interfaces";
 import { SOCKET_URL } from "http/urls";
+import { TCall } from "typization/types";
+import { defaultSocketContextValues } from "./defaultSocketContextValues";
+import { SOCKET_ACTIONS } from "../constants/socketActions";
 
 const socket = io.connect(SOCKET_URL);
 
-type TCall = {
-    isReceivingCall: boolean;
-    from: any;
-    name: string;
-    signal: SignalData;
-};
+export const SocketContext = createContext(defaultSocketContextValues);
 
 type TContextProvider = {
     children: any;
 };
-
-interface ISocketContext {
-    joinChat: (userName: string) => void;
-    onChatMessage: (setter: (d: IMsg) => void) => void;
-    sendChatMessage: (message: string, userName: string) => void;
-    call: TCall;
-    callAccepted: boolean;
-    callEnded: boolean;
-    myVideo: any;
-    userVideo: any;
-    stream: MediaStream | undefined;
-    meetId: string;
-    answerCall: () => void;
-    callUser: (id: string, userName: string) => void;
-    leaveCall: () => void;
-}
-
-const defaultSocketContextValues: ISocketContext = {
-    joinChat: () => {},
-    onChatMessage: () => {},
-    sendChatMessage: () => {},
-    call: {} as TCall,
-    callAccepted: false,
-    callEnded: false,
-    myVideo: undefined,
-    userVideo: undefined,
-    stream: undefined,
-    meetId: "",
-    answerCall: () => {},
-    callUser: () => {},
-    leaveCall: () => {}
-};
-
-export const SocketContext = createContext<ISocketContext>(defaultSocketContextValues);
 
 const ContextProvider = ({ children }: TContextProvider) => {
     const [stream, setStream] = useState<MediaStream | undefined>();
@@ -61,13 +25,13 @@ const ContextProvider = ({ children }: TContextProvider) => {
 
     const myVideo = useRef<HTMLMediaElement | undefined>();
     const userVideo = useRef<HTMLMediaElement | undefined>();
-    const connectionRef = useRef<HTMLMediaElement | undefined>();
+    const connectionRef = useRef<Peer.Instance>();
 
     const joinChat = (userName: string) => socket.emit("joinChat", { userName });
     const onChatMessage = (setter: (d: IMsg) => void) =>
-        socket.on("chatMessage", (data: IMsg) => setter(data));
+        socket.on(SOCKET_ACTIONS.CHAT_MESSAGE, (data: IMsg) => setter(data));
     const sendChatMessage = (message: string, userName: string) =>
-        socket.emit("sendChatMessage", {
+        socket.emit(SOCKET_ACTIONS.SEND_CHAT_MESSAGE, {
             message,
             userName
         });
@@ -77,16 +41,13 @@ const ContextProvider = ({ children }: TContextProvider) => {
         const _myVideo = myVideo.current;
         if (_myVideo && stream) {
             _myVideo.srcObject = stream;
-            console.log("myVideo", myVideo);
         }
     }, [stream]);
 
     useEffect(() => {
         const _userVideo = userVideo.current;
         if (_userVideo && userStream) {
-            console.log("userVideo", userVideo);
             _userVideo.srcObject = userStream;
-            console.log("userVideo", userVideo);
         }
     }, [userStream]);
 
@@ -104,21 +65,23 @@ const ContextProvider = ({ children }: TContextProvider) => {
         }
 
         //get socket id when connection opened
-        socket.on("socketId", (id) => setMeetId(id));
+        socket.on(SOCKET_ACTIONS.SOCKET_ID, (id) => setMeetId(id));
+
+        socket.on(SOCKET_ACTIONS.CALL_ENDED, () => leaveCall());
 
         //get call data from server to create a call
-        socket.on("callUser", ({ from, name: callerName, signal }) => {
+        socket.on(SOCKET_ACTIONS.CALL_USER, ({ from, name: callerName, signal }) => {
             setCall({ isReceivingCall: true, from, name: callerName, signal });
         });
     }, []);
 
-    const answerCall = () => {
+    const acceptCall = () => {
         setCallAccepted(true);
 
         const peer = new Peer({ initiator: false, trickle: false, stream });
 
         peer.on("signal", (data) => {
-            socket.emit("answerCall", { signal: data, to: call.from });
+            socket.emit(SOCKET_ACTIONS.ANSWER_CALL, { signal: data, to: call.from });
         });
 
         //stream other user video
@@ -128,14 +91,14 @@ const ContextProvider = ({ children }: TContextProvider) => {
 
         peer.signal(call.signal);
 
-        connectionRef.current = peer as Peer.Instance & HTMLMediaElement;
+        connectionRef.current = peer;
     };
 
     const callUser = (id: string, userName: string) => {
         const peer = new Peer({ initiator: true, trickle: false, stream });
 
         peer.on("signal", (data) => {
-            socket.emit("callUser", {
+            socket.emit(SOCKET_ACTIONS.CALL_USER, {
                 userToCall: id,
                 signalData: data,
                 from: meetId,
@@ -147,18 +110,22 @@ const ContextProvider = ({ children }: TContextProvider) => {
             setUserStream(currentStream);
         });
 
-        socket.on("callAccepted", (signal) => {
+        socket.on(SOCKET_ACTIONS.CALL_ACCEPTED, (signal) => {
             setCallAccepted(true);
             peer.signal(signal);
         });
 
-        connectionRef.current = peer as Peer.Instance & HTMLMediaElement;
+        connectionRef.current = peer;
     };
 
     const leaveCall = () => {
         setCallEnded(true);
 
-        (connectionRef.current as any).destroy();
+        const peerConnection = connectionRef.current;
+
+        if (peerConnection) {
+            peerConnection.destroy();
+        }
 
         window.location.reload();
     };
@@ -176,7 +143,7 @@ const ContextProvider = ({ children }: TContextProvider) => {
                 userVideo,
                 stream,
                 meetId,
-                answerCall,
+                acceptCall,
                 callUser,
                 leaveCall
             }}

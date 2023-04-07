@@ -12,11 +12,7 @@ const App = () => {
         }
     }, []);
 
-    return (
-        <>
-            <RoutesComponent isAuth={isAuth} isLoading={isLoading} />
-        </>
-    );
+    return <RoutesComponent isAuth={isAuth} isLoading={isLoading} />;
 };
 
 export default App;

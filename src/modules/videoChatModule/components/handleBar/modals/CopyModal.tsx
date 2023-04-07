@@ -6,6 +6,7 @@ import Copy from "assets/svgComponents/Copy";
 import Close from "assets/svgComponents/Close";
 
 import { CopyToClipboard } from "react-copy-to-clipboard";
+import { gray300, gray400 } from "../../../../../constants/styles/colors";
 
 interface IMeetingModal {
     setIsVisible: (v: boolean) => void;
@@ -20,15 +21,15 @@ const MeetingModal: FC<IMeetingModal> = ({ meetId, setIsVisible }) => {
     return (
         <ClickAwayListener onClickAway={closeModal}>
             <div
-                className={`flex flex-col justify-between p-[20px] absolute h-[230px] w-[360px] top-[50%] left-[50%] translate-x-[-50%] translate-y-[-50%] rounded ${EXTRA_MAIN_BG} shadow-custom`}
+                className={`z-10 flex flex-col justify-between p-[20px] absolute h-[230px] w-[360px] top-[50%] left-[50%] translate-x-[-50%] translate-y-[-50%] rounded ${EXTRA_MAIN_BG} shadow-custom`}
             >
                 <div className={`flex justify-between`}>
-                    <h2 className={`text-gray-300`}>Код вашей встречи</h2>
+                    <h2 className={`${gray300}`}>Код вашей встречи</h2>
                     <span onClick={closeModal} className={"cursor-pointer"}>
                         <Close size={"24px"} />
                     </span>
                 </div>
-                <p className={`text-gray-400`}>
+                <p className={`${gray400}`}>
                     Скопируйте эту ссылку и поделитесь с теми, кого хотите пригласить. Сохраните ее,
                     если планируете встречу позже.
                 </p>

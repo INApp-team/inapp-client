@@ -11,10 +11,3 @@ declare module "*.svg" {
     const value: any;
     export default value;
 }
-// declare module "simple-peer";
-declare global {
-    interface Window {
-        SpeechRecognition: any;
-        webkitSpeechRecognition: any;
-    }
-}

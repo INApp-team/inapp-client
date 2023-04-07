@@ -1,17 +1,18 @@
 import { Button, Input } from "ui";
 import { Camera, Microphone, UserAdd } from "assets/svgComponents";
-import MeetingModal from "./modal";
-import { ChangeEvent, useCallback, useContext, useState } from "react";
+import { ChangeEvent, lazy, Suspense, useCallback, useContext, useState } from "react";
 import { SocketContext } from "context/SocketContext";
 import useAuthStore from "store/authStore";
+
+const CopyModal = lazy(() => import("./modals/CopyModal"));
 
 const HandleBar = () => {
     const userData = useAuthStore((state) => state.user);
 
-    const { meetId, stream, call, callUser, callAccepted, callEnded, leaveCall, answerCall } =
+    const { meetId, stream, call, callUser, callAccepted, callEnded, leaveCall, acceptCall } =
         useContext(SocketContext);
 
-    const [modalOpened, setModalOpened] = useState(false);
+    const [copyModalOpened, setCopyModalOpened] = useState(false);
     const [meetingId, setMeetingId] = useState("");
 
     const activeCallFlag = callAccepted && !callEnded;
@@ -82,7 +83,7 @@ const HandleBar = () => {
             </div>
             <div className={"flex flex-row gap-[10px] w-fit"}>
                 <Button
-                    onClick={() => setModalOpened(true)}
+                    onClick={() => setCopyModalOpened(true)}
                     className={"!py-1 !px-2"}
                     title={"Начать встречу"}
                 >
@@ -102,10 +103,15 @@ const HandleBar = () => {
             {call.isReceivingCall && !callAccepted && (
                 <div style={{ display: "flex", justifyContent: "space-around" }}>
                     <h1>{call.name} is calling:</h1>
-                    <Button onClick={answerCall}>Answer</Button>
+                    <Button onClick={acceptCall}>Answer</Button>
+                    <Button onClick={leaveCall}>Сбросить</Button>
                 </div>
             )}
-            {modalOpened && <MeetingModal meetId={meetId} setIsVisible={setModalOpened} />}
+            {copyModalOpened && (
+                <Suspense>
+                    <CopyModal meetId={meetId} setIsVisible={setCopyModalOpened} />
+                </Suspense>
+            )}
         </div>
     );
 };

@@ -2,12 +2,13 @@ import { MouseEvent, KeyboardEvent, useCallback, useEffect, useState, useContext
 import useAuthStore from "store/authStore";
 import { Button, Input } from "ui";
 import { DEFAULT_BORDER } from "constants/styles/borders";
-import { IMsg } from "interfaces";
+import { IMsg } from "typization/interfaces";
 import { EXTRA_MAIN_BG, MAIN_BG } from "constants/styles/backgrounds";
 import useLangStore from "store/langStore";
 import { translateLanguage, detectLanguage } from "./utils/http";
 import useAsyncEffect from "hooks/useAsyncEffect";
 import { SocketContext } from "context/SocketContext";
+import { gray400, green500, white } from "../../constants/styles/colors";
 
 const ChatModule = () => {
     const { joinChat, onChatMessage, sendChatMessage } = useContext(SocketContext);
@@ -89,12 +90,12 @@ const ChatModule = () => {
                         <div className={wrapperClassName} key={index}>
                             <p
                                 className={`${
-                                    isAdminFlag ? "text-md text-green-500" : "text-xs text-gray-400"
+                                    isAdminFlag ? `text-md ${green500}` : `text-xs ${gray400}`
                                 }`}
                             >
                                 {mUser}:
                             </p>
-                            <p className={"text-white"}>{m.message}</p>
+                            <p className={`${white}`}>{m.message}</p>
                         </div>
                     );
                 })}

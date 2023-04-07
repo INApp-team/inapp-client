@@ -1,5 +1,6 @@
 import React, { memo } from "react";
 import { MEDIUM_LIGHT_BG } from "constants/styles/backgrounds";
+import { white } from "../../constants/styles/colors";
 
 type ButtonProps = React.ButtonHTMLAttributes<HTMLButtonElement> & {
     children: React.ReactNode;
@@ -17,7 +18,7 @@ const Button = ({
 }: ButtonProps) => {
     return (
         <button
-            className={`${background} hover:bg-gray-400 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline ${className}`}
+            className={`${background} hover:bg-gray-400 ${white} font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline ${className}`}
             type="button"
             {...props}
         >
