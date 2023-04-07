@@ -1,4 +1,4 @@
-const Copy = ({ size = "30px", color = "black" }) => {
+const Copy = ({ size = "32px", color = "black" }) => {
     return (
         <svg width={size} height={size} viewBox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg">
             <path

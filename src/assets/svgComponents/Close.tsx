@@ -1,4 +1,4 @@
-const Close = ({ size = "30px", color = "black" }) => {
+const Close = ({ size = "32px", color = "black" }) => {
     return (
         <svg
             width={size}

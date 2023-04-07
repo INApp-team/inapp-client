@@ -5,7 +5,7 @@ import { IMsg } from "typization/interfaces";
 import { SOCKET_URL } from "http/urls";
 import { TCall } from "typization/types";
 import { defaultSocketContextValues } from "./defaultSocketContextValues";
-import { SOCKET_ACTIONS } from "../constants/socketActions";
+import { SOCKET_ACTIONS } from "constants/socketActions";
 
 const socket = io.connect(SOCKET_URL);
 

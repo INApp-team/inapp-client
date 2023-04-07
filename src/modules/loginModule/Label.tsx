@@ -1,5 +1,5 @@
 import { FC } from "react";
-import { black } from "../../constants/styles/colors";
+import { black } from "constants/styles/colors";
 
 interface ILabel {
     htmlFor: string;

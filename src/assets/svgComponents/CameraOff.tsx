@@ -1,4 +1,4 @@
-const UserAdd = ({ size = "32px", color = "black" }) => {
+const CameraOff = ({ size = "32px", color = "black" }) => {
     return (
         <svg
             width={size}
@@ -8,7 +8,7 @@ const UserAdd = ({ size = "32px", color = "black" }) => {
             xmlns="http://www.w3.org/2000/svg"
         >
             <path
-                d="M20 8.5V13.5M17.5 11H22.5M8 15H16C18.2091 15 20 16.7909 20 19V21H4V19C4 16.7909 5.79086 15 8 15ZM16 7C16 9.20914 14.2091 11 12 11C9.79086 11 8 9.20914 8 7C8 4.79086 9.79086 3 12 3C14.2091 3 16 4.79086 16 7Z"
+                d="M10 5H14.5C15.0523 5 15.5 5.44772 15.5 6C15.5 6.55228 15.9477 7 16.5 7H19C20.1046 7 21 7.89543 21 9V16M3 3L21 21M11.6598 15.9809C10.2795 15.8251 9.18287 14.7327 9.02069 13.3543M3 9V17C3 18.1046 3.89543 19 5 19H14"
                 stroke={color}
                 strokeWidth="1.5"
                 strokeLinecap="round"
@@ -17,4 +17,4 @@ const UserAdd = ({ size = "32px", color = "black" }) => {
         </svg>
     );
 };
-export default UserAdd;
+export default CameraOff;

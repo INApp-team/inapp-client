@@ -1,2 +1,2 @@
-export const DEFAULT_BORDER = "border-gray-600";
-export const LIGHT_BORDER = "border-gray-400";
+export const borderWhite = "border-white";
+export const borderGray600 = "border-gray-600";

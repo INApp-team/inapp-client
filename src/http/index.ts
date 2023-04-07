@@ -1,5 +1,5 @@
 import axios from "axios";
-import { IAuthResponse } from "../typization/interfaces";
+import { IAuthResponse } from "typization/interfaces";
 import { API_URL } from "./urls";
 
 const $api = axios.create({

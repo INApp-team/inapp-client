@@ -1,14 +1,14 @@
 import { MouseEvent, KeyboardEvent, useCallback, useEffect, useState, useContext } from "react";
 import useAuthStore from "store/authStore";
 import { Button, Input } from "ui";
-import { DEFAULT_BORDER } from "constants/styles/borders";
+import { borderGray600 } from "constants/styles/borders";
 import { IMsg } from "typization/interfaces";
-import { EXTRA_MAIN_BG, MAIN_BG } from "constants/styles/backgrounds";
+import { bgBlue600, bgGray800, bgGray700 } from "constants/styles/backgrounds";
 import useLangStore from "store/langStore";
 import { translateLanguage, detectLanguage } from "./utils/http";
 import useAsyncEffect from "hooks/useAsyncEffect";
 import { SocketContext } from "context/SocketContext";
-import { gray400, green500, white } from "../../constants/styles/colors";
+import { gray400, green500, white } from "constants/styles/colors";
 
 const ChatModule = () => {
     const { joinChat, onChatMessage, sendChatMessage } = useContext(SocketContext);
@@ -74,17 +74,17 @@ const ChatModule = () => {
     return (
         <div className={"h-full w-[35%] p-[10px]"}>
             <div
-                className={`flex flex-col overflow-y-auto h-[calc(100%-50px)] mb-[10px] border-[1px] p-[20px] rounded ${DEFAULT_BORDER} ${EXTRA_MAIN_BG} break-all`}
+                className={`flex flex-col overflow-y-auto h-[calc(100%-50px)] mb-[10px] border-[1px] p-[20px] rounded ${borderGray600} ${bgGray700} break-all`}
             >
                 {allMsgs.map((m, index) => {
                     const mUser = m.user;
                     const isAdminFlag = mUser === "admin";
                     const wrapperClassName = isAdminFlag
-                        ? `flex flex-row items-center gap-2 ${EXTRA_MAIN_BG} mb-6`
+                        ? `flex flex-row items-center gap-2 ${bgGray700} mb-6`
                         : `flex flex-col rounded w-fit py-2 px-4 mb-6 ${
                               mUser === user.login
-                                  ? `self-end ${MAIN_BG}`
-                                  : `self-start bg-blue-600`
+                                  ? `self-end ${bgGray800}`
+                                  : `self-start ${bgBlue600}`
                           }`;
                     return (
                         <div className={wrapperClassName} key={index}>

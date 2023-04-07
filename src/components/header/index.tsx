@@ -1,13 +1,13 @@
 import { FC, memo } from "react";
 
 import chatIcon from "assets/chatIcon.png";
-import { MAIN_BG } from "constants/styles/backgrounds";
+import { bgGray800 } from "constants/styles/backgrounds";
 import useAuthStore from "store/authStore";
 import { Select } from "ui";
-import { DEFAULT_BORDER } from "constants/styles/borders";
+import { borderGray600 } from "constants/styles/borders";
 import { EN, RU } from "constants/langs";
 import useLangStore from "store/langStore";
-import { white } from "../../constants/styles/colors";
+import { white } from "constants/styles/colors";
 
 const Header: FC = () => {
     const { logout } = useAuthStore((state) => state);
@@ -15,8 +15,8 @@ const Header: FC = () => {
     const { currentLang, setLang } = useLangStore((state) => state);
 
     return (
-        <header className={`border-b-[1px] ${DEFAULT_BORDER}`}>
-            <nav className={`px-[40px] py-[16px] ${MAIN_BG}`}>
+        <header className={`border-b-[1px] ${borderGray600}`}>
+            <nav className={`px-[40px] py-[16px] ${bgGray800}`}>
                 <div className="flex justify-between items-center cursor-pointer">
                     <div className="flex">
                         <img src={chatIcon} className="mr-[10px] h-10" alt="INApp logo" />

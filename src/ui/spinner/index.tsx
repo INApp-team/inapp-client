@@ -1,12 +1,22 @@
 import { FC, memo } from "react";
-import { gray200, gray600 } from "constants/styles/colors";
+import { gray200 } from "constants/styles/colors";
+import { fillGray600 } from "constants/styles/fills";
 
-const Spinner: FC = () => {
+interface ISpinner {
+    spinColor?: string;
+    circleColor?: string;
+    className?: string;
+}
+const Spinner: FC<ISpinner> = ({
+    spinColor = fillGray600,
+    circleColor = gray200,
+    className = ""
+}) => {
     return (
         <div className="absolute top-[50%] left-[50%]" role="status">
             <svg
                 aria-hidden="true"
-                className={`inline w-8 h-8 mr-2 ${gray200} animate-spin dark:${gray600} fill-blue-600`}
+                className={`inline w-8 h-8 mr-2 ${circleColor} animate-spin ${spinColor} ${className}`}
                 viewBox="0 0 100 101"
                 fill="none"
                 xmlns="http://www.w3.org/2000/svg"
@@ -20,7 +30,6 @@ const Spinner: FC = () => {
                     fill="currentFill"
                 />
             </svg>
-            <span className="sr-only">Loading...</span>
         </div>
     );
 };
