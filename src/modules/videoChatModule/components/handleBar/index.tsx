@@ -4,15 +4,27 @@ import { ChangeEvent, lazy, Suspense, useCallback, useContext, useEffect, useSta
 import { SocketContext } from "context/SocketContext";
 import useAuthStore from "store/authStore";
 import { switchMediaEntity } from "./utils";
+import { bgGreen400, bgRed400 } from "constants/styles/backgrounds";
+import { openPopup } from "ui/popup";
 
+const Popup = lazy(() => import("ui/popup"));
 const CopyModal = lazy(() => import("./modals/CopyModal"));
 const CallModal = lazy(() => import("./modals/CallModal"));
 
 const HandleBar = () => {
     const userData = useAuthStore((state) => state.user);
 
-    const { meetId, stream, call, callUser, callAccepted, callEnded, leaveCall, acceptCall } =
-        useContext(SocketContext);
+    const {
+        meetId,
+        stream,
+        call,
+        callUser,
+        callAccepted,
+        callEnded,
+        leaveCall,
+        acceptCall,
+        callInfo
+    } = useContext(SocketContext);
 
     const activeCallFlag = callAccepted && !callEnded;
 
@@ -23,6 +35,14 @@ const HandleBar = () => {
 
     const [video, setVideo] = useState(true);
     const [audio, setAudio] = useState(true);
+
+    console.log(callInfo);
+
+    useEffect(() => {
+        if (callInfo) {
+            openPopup(callInfo);
+        }
+    }, [callInfo]);
 
     useEffect(() => {
         setCallModalOpened(call.isReceivingCall && !callAccepted);
@@ -46,17 +66,30 @@ const HandleBar = () => {
         switchMediaEntity("audio", stream, audio, setAudio);
     }, [switchMediaEntity, stream, audio, setAudio]);
 
+    const getSwitchesBtnsStyles = useCallback(
+        (entity: boolean) => ({
+            backgroundColor: entity ? bgGreen400 : bgRed400,
+            className: "!py-1 !px-2",
+            hover: entity ? "hover:bg-green-300" : "hover:bg-red-300"
+        }),
+        []
+    );
+
     return (
         <>
             <div className="flex flex-row justify-between items-center">
                 <div className={"flex flex-row gap-[10px] w-fit"}>
-                    <Button onClick={handleSwitchVideo} title={"Камера"} className={"!py-1 !px-2"}>
+                    <Button
+                        onClick={handleSwitchVideo}
+                        title={"Камера"}
+                        {...getSwitchesBtnsStyles(video)}
+                    >
                         {video ? <Camera /> : <CameraOff />}
                     </Button>
                     <Button
                         onClick={handleSwitchAudio}
                         title={"Микрофон"}
-                        className={"!py-1 !px-2"}
+                        {...getSwitchesBtnsStyles(audio)}
                     >
                         {audio ? <Microphone /> : <MicrophoneOff />}
                     </Button>
@@ -82,21 +115,18 @@ const HandleBar = () => {
                     )}
                 </div>
             </div>
-            {callModalOpened && (
-                <Suspense>
+            <Suspense>
+                {callModalOpened && (
                     <CallModal
                         onAcceptCall={acceptCall}
                         onLeaveCall={leaveCall}
                         callerName={call.name}
                         setIsVisible={setCallModalOpened}
                     />
-                </Suspense>
-            )}
-            {copyModalOpened && (
-                <Suspense>
-                    <CopyModal meetId={meetId} setIsVisible={setCopyModalOpened} />
-                </Suspense>
-            )}
+                )}
+                {copyModalOpened && <CopyModal meetId={meetId} setIsVisible={setCopyModalOpened} />}
+                <Popup />
+            </Suspense>
         </>
     );
 };

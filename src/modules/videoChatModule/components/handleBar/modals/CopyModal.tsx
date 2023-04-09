@@ -1,13 +1,13 @@
-import { FC, memo, useCallback } from "react";
+import { FC, lazy, memo, useCallback } from "react";
 import { bgGray700 } from "constants/styles/backgrounds";
 import ClickAwayListener from "react-click-away-listener";
-import { Button, Input, Popup } from "ui";
-import { openPopup } from "ui/popup";
-import Copy from "assets/svgComponents/Copy";
-import Close from "assets/svgComponents/Close";
-
+import { Button, Input } from "ui";
 import { CopyToClipboard } from "react-copy-to-clipboard";
 import { gray300, gray400 } from "constants/styles/colors";
+import { Copy, Close } from "assets/svgComponents";
+import { openPopup } from "ui/popup";
+
+const Popup = lazy(() => import("ui/popup"));
 
 interface IMeetingModal {
     setIsVisible: (v: boolean) => void;

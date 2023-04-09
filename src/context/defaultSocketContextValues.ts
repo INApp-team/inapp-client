@@ -1,11 +1,10 @@
-import { IMsg } from "typization/interfaces";
-import { TCall } from "typization/types";
+import { IMsg, ICall } from "interfaces";
 
 interface ISocketContext {
     joinChat: (userName: string) => void;
     onChatMessage: (setter: (d: IMsg) => void) => void;
     sendChatMessage: (message: string, userName: string) => void;
-    call: TCall;
+    call: ICall;
     callAccepted: boolean;
     callEnded: boolean;
     myVideo: any;
@@ -15,13 +14,14 @@ interface ISocketContext {
     acceptCall: () => void;
     callUser: (id: string, userName: string) => void;
     leaveCall: () => void;
+    callInfo: string;
 }
 
 export const defaultSocketContextValues: ISocketContext = {
     joinChat: () => {},
     onChatMessage: () => {},
     sendChatMessage: () => {},
-    call: {} as TCall,
+    call: {} as ICall,
     callAccepted: false,
     callEnded: false,
     myVideo: undefined,
@@ -30,5 +30,6 @@ export const defaultSocketContextValues: ISocketContext = {
     meetId: "",
     acceptCall: () => {},
     callUser: () => {},
-    leaveCall: () => {}
+    leaveCall: () => {},
+    callInfo: ""
 };

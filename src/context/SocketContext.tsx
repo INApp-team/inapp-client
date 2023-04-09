@@ -1,9 +1,8 @@
 import { createContext, useEffect, useRef, useState } from "react";
 import Peer from "simple-peer";
 import * as io from "socket.io-client";
-import { IMsg } from "typization/interfaces";
+import { ICall, IMsg } from "interfaces";
 import { SOCKET_URL } from "http/urls";
-import { TCall } from "typization/types";
 import { defaultSocketContextValues } from "./defaultSocketContextValues";
 import { SOCKET_ACTIONS } from "constants/socketActions";
 
@@ -19,9 +18,10 @@ const ContextProvider = ({ children }: TContextProvider) => {
     const [stream, setStream] = useState<MediaStream | undefined>();
     const [userStream, setUserStream] = useState<MediaStream | undefined>();
     const [meetId, setMeetId] = useState("");
-    const [call, setCall] = useState<TCall>({} as TCall);
+    const [call, setCall] = useState<ICall>({} as ICall);
     const [callAccepted, setCallAccepted] = useState(false);
     const [callEnded, setCallEnded] = useState(false);
+    const [callInfo, setCallInfo] = useState("");
 
     const myVideo = useRef<HTMLMediaElement | undefined>();
     const userVideo = useRef<HTMLMediaElement | undefined>();
@@ -67,7 +67,13 @@ const ContextProvider = ({ children }: TContextProvider) => {
         //get socket id when connection opened
         socket.on(SOCKET_ACTIONS.SOCKET_ID, (id) => setMeetId(id));
 
-        socket.on(SOCKET_ACTIONS.CALL_ENDED, () => leaveCall());
+        socket.on(SOCKET_ACTIONS.CALL_ENDED, () => {
+            if (connectionRef.current) {
+                leaveCall();
+            }
+        });
+
+        socket.on(SOCKET_ACTIONS.CALL_SENT, (info) => setCallInfo(info));
 
         //get call data from server to create a call
         socket.on(SOCKET_ACTIONS.CALL_USER, ({ from, name: callerName, signal }) => {
@@ -145,7 +151,8 @@ const ContextProvider = ({ children }: TContextProvider) => {
                 meetId,
                 acceptCall,
                 callUser,
-                leaveCall
+                leaveCall,
+                callInfo
             }}
         >
             {children}

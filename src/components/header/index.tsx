@@ -1,32 +1,35 @@
 import { FC, memo } from "react";
-
-import chatIcon from "assets/chatIcon.png";
-import { bgGray800 } from "constants/styles/backgrounds";
 import useAuthStore from "store/authStore";
-import { Select } from "ui";
-import { borderGray600 } from "constants/styles/borders";
-import { EN, RU } from "constants/langs";
 import useLangStore from "store/langStore";
+import classNames from "classnames";
+import { Select } from "ui";
+
+import { EN, RU } from "constants/langs";
 import { white } from "constants/styles/colors";
+import { borderGray600 } from "constants/styles/borders";
+import { bgGray800 } from "constants/styles/backgrounds";
+import chatIcon from "assets/chatIcon.png";
 
 const Header: FC = () => {
-    const { logout } = useAuthStore((state) => state);
-
+    const logout = useAuthStore((state) => state.logout);
     const { currentLang, setLang } = useLangStore((state) => state);
 
     return (
-        <header className={`border-b-[1px] ${borderGray600}`}>
+        <header className={classNames("border-b-[1px]", borderGray600)}>
             <nav className={`px-[40px] py-[16px] ${bgGray800}`}>
-                <div className="flex justify-between items-center cursor-pointer">
-                    <div className="flex">
-                        <img src={chatIcon} className="mr-[10px] h-10" alt="INApp logo" />
+                <div className={"flex justify-between items-center cursor-pointer"}>
+                    <div className={"flex"}>
+                        <img src={chatIcon} className={"mr-[10px] h-10"} alt="INApp logo" />
                         <span
-                            className={`self-center text-2xl font-semibold whitespace-nowrap ${white}`}
+                            className={classNames(
+                                "self-center text-2xl font-semibold whitespace-nowrap",
+                                white
+                            )}
                         >
                             INApp
                         </span>
                     </div>
-                    <div className="flex items-center gap-[20px]">
+                    <div className={"flex items-center gap-[20px]"}>
                         <Select
                             value={currentLang}
                             onChange={(e) => setLang(e.target.value)}
@@ -37,7 +40,7 @@ const Header: FC = () => {
                         />
                         <span
                             onClick={logout}
-                            className="text-xl font-medium text-white cursor-pointer"
+                            className={"text-xl font-medium text-white cursor-pointer"}
                         >
                             Выйти
                         </span>

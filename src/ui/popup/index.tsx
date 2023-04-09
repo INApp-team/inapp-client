@@ -14,18 +14,22 @@ const Popup = ({
     backgroundColor = "rgb(55 65 81)",
     props
 }: TPopup) => {
+    const defaultProps = {
+        position: "bottom-left",
+        autoClose: 5000,
+        newestOnTop: false,
+        closeOnClick: true,
+        rtl: false,
+        hideProgressBar: true,
+        pauseOnFocusLoss: true,
+        pauseOnHover: true,
+        theme: "dark"
+    };
+
     return (
         <ToastContainer
             toastStyle={{ backgroundColor, color: textColor }}
-            position="bottom-left"
-            autoClose={5000}
-            newestOnTop={false}
-            closeOnClick
-            rtl={false}
-            hideProgressBar
-            pauseOnFocusLoss
-            pauseOnHover
-            theme="dark"
+            {...(defaultProps as ToastContainerProps)}
             {...props}
         />
     );

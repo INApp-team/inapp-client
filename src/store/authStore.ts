@@ -1,7 +1,8 @@
-import { IAuthResponse, IUser } from "typization/interfaces";
+import { IAuthResponse, IUser } from "interfaces";
 import axios from "axios";
 import $api from "../http";
 import { API_URL } from "http/urls";
+import { TOKEN } from "constants/localSt";
 
 import { create } from "zustand";
 import { immer } from "zustand/middleware/immer";
@@ -34,7 +35,7 @@ const useAuthStore = create<IUseAuthStore>()(
                             withCredentials: true
                         }
                     );
-                    localStorage.setItem("token", response.data.accessToken);
+                    localStorage.setItem(TOKEN, response.data.accessToken);
                     set({ isAuth: true });
                     set({ user: response.data.user });
                     set({ authErrorStr: "" });
@@ -54,7 +55,7 @@ const useAuthStore = create<IUseAuthStore>()(
                             withCredentials: true
                         }
                     );
-                    localStorage.setItem("token", response.data.accessToken);
+                    localStorage.setItem(TOKEN, response.data.accessToken);
                     set({ isAuth: true });
                     set({ user: response.data.user });
                     set({ authErrorStr: "" });
@@ -67,9 +68,10 @@ const useAuthStore = create<IUseAuthStore>()(
                     await $api.post("/logout", undefined, {
                         withCredentials: true
                     });
-                    localStorage.removeItem("token");
+                    localStorage.removeItem(TOKEN);
                     set({ isAuth: false });
                     set({ user: {} as IUser });
+                    window.location.reload();
                 } catch (e: any) {
                     console.log(e.response?.data?.message);
                 }
@@ -80,7 +82,7 @@ const useAuthStore = create<IUseAuthStore>()(
                     const response = await axios.get<IAuthResponse>(`${API_URL}/refresh`, {
                         withCredentials: true
                     });
-                    localStorage.setItem("token", response.data.accessToken);
+                    localStorage.setItem(TOKEN, response.data.accessToken);
                     set({ isAuth: true });
                     set({ user: response.data.user });
                 } catch (e: any) {
