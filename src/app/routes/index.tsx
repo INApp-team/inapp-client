@@ -36,7 +36,15 @@ const RoutesComponent: FC<IRoutesComponent> = ({ isAuth, isLoading }) => {
                 </>
             ) : (
                 <>
-                    <Route path="/login" element={<LoginPage />} />
+                    <Route
+                        path="/login"
+                        element={
+                            <>
+                                <LoginPage />
+                                <Footer />
+                            </>
+                        }
+                    />
                     <Route path="*" element={<Navigate to="/login" replace />} />
                 </>
             )}

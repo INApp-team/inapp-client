@@ -15,9 +15,14 @@ const Header: FC = () => {
     const { currentLang, setLang } = useLangStore((state) => state);
 
     return (
-        <header className={classNames("border-b-[1px]", borderGray600)}>
-            <nav className={`px-[40px] py-[16px] ${bgGray800}`}>
-                <div className={"flex justify-between items-center cursor-pointer"}>
+        <header
+            className={classNames(
+                "absolute w-full border-b-[1px] top-0 h-[theme(layout.headerHeight)]",
+                borderGray600
+            )}
+        >
+            <nav className={classNames("px-[40px] h-full", bgGray800)}>
+                <div className={"flex h-full justify-between items-center cursor-pointer"}>
                     <div className={"flex"}>
                         <img src={chatIcon} className={"mr-[10px] h-10"} alt="INApp logo" />
                         <span

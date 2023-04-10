@@ -1,5 +1,7 @@
+import { AUDIO, VIDEO } from "./constants";
+
 export const switchMediaEntity = (
-    type: "audio" | "video",
+    type: typeof AUDIO | typeof VIDEO,
     stream: MediaStream | undefined,
     entity: boolean,
     entitySetter: (v: boolean) => void

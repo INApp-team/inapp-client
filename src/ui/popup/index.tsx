@@ -16,7 +16,7 @@ const Popup = ({
 }: TPopup) => {
     const defaultProps = {
         position: "bottom-left",
-        autoClose: 5000,
+        autoClose: 3000,
         newestOnTop: false,
         closeOnClick: true,
         rtl: false,

@@ -6,9 +6,9 @@ import { gray500 } from "constants/styles/colors";
 
 const Footer: FC = () => {
     return (
-        <footer>
-            <nav className={classNames("w-full absolute bottom-0 py-[10px]", bgGray800)}>
-                <div className={"flex justify-center items-center"}>
+        <footer className={classNames("absolute bottom-0 w-full h-[theme(layout.footerHeight)]")}>
+            <nav className={classNames("w-full h-full", bgGray800)}>
+                <div className={"flex h-full justify-center items-center"}>
                     <span className={classNames("font-normal text-sm", gray500)}>
                         All rights reserved © INApp {new Date().getFullYear()}
                     </span>

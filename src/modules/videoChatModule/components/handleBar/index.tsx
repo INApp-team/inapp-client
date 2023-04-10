@@ -1,9 +1,10 @@
 import { Button, Input } from "ui";
-import { Camera, Microphone, UserAdd, CameraOff, MicrophoneOff } from "assets/svgComponents";
+import { Camera, CameraOff, Microphone, MicrophoneOff, UserAdd } from "assets/svgComponents";
 import { ChangeEvent, lazy, Suspense, useCallback, useContext, useEffect, useState } from "react";
 import { SocketContext } from "context/SocketContext";
 import useAuthStore from "store/authStore";
 import { switchMediaEntity } from "./utils";
+import { AUDIO, VIDEO } from "./constants";
 import { bgGreen400, bgRed400 } from "constants/styles/backgrounds";
 import { openPopup } from "ui/popup";
 
@@ -23,7 +24,7 @@ const HandleBar = () => {
         callEnded,
         leaveCall,
         acceptCall,
-        callInfo
+        onCallSent
     } = useContext(SocketContext);
 
     const activeCallFlag = callAccepted && !callEnded;
@@ -36,13 +37,9 @@ const HandleBar = () => {
     const [video, setVideo] = useState(true);
     const [audio, setAudio] = useState(true);
 
-    console.log(callInfo);
-
     useEffect(() => {
-        if (callInfo) {
-            openPopup(callInfo);
-        }
-    }, [callInfo]);
+        onCallSent(openPopup);
+    }, []);
 
     useEffect(() => {
         setCallModalOpened(call.isReceivingCall && !callAccepted);
@@ -58,12 +55,14 @@ const HandleBar = () => {
         }
     }, [callUser, meetingId, userData]);
 
+    const handleOpenCopyModal = useCallback(() => setCopyModalOpened(true), []);
+
     const handleSwitchVideo = useCallback(() => {
-        switchMediaEntity("video", stream, video, setVideo);
+        switchMediaEntity(VIDEO, stream, video, setVideo);
     }, [switchMediaEntity, stream, video, setVideo]);
 
     const handleSwitchAudio = useCallback(() => {
-        switchMediaEntity("audio", stream, audio, setAudio);
+        switchMediaEntity(AUDIO, stream, audio, setAudio);
     }, [switchMediaEntity, stream, audio, setAudio]);
 
     const getSwitchesBtnsStyles = useCallback(
@@ -96,7 +95,7 @@ const HandleBar = () => {
                 </div>
                 <div className={"flex flex-row gap-[10px] w-fit"}>
                     <Button
-                        onClick={() => setCopyModalOpened(true)}
+                        onClick={handleOpenCopyModal}
                         className={"!py-1 !px-2"}
                         title={"Начать встречу"}
                     >
@@ -106,7 +105,7 @@ const HandleBar = () => {
                         disabled={activeCallFlag}
                         onChange={handleSetMeetingId}
                         placeholder={"Введите код встречи"}
-                        className={"!max-w-[300px]"}
+                        className={"w-[260px]"}
                     />
                     {activeCallFlag ? (
                         <Button onClick={leaveCall}>Сбросить</Button>

@@ -5,6 +5,7 @@ import { ICall, IMsg } from "interfaces";
 import { SOCKET_URL } from "http/urls";
 import { defaultSocketContextValues } from "./defaultSocketContextValues";
 import { SOCKET_ACTIONS } from "constants/socketActions";
+import useAuthStore from "../store/authStore";
 
 const socket = io.connect(SOCKET_URL);
 
@@ -15,13 +16,14 @@ type TContextProvider = {
 };
 
 const ContextProvider = ({ children }: TContextProvider) => {
+    const isAuth = useAuthStore((state) => state.isAuth);
+
     const [stream, setStream] = useState<MediaStream | undefined>();
     const [userStream, setUserStream] = useState<MediaStream | undefined>();
     const [meetId, setMeetId] = useState("");
     const [call, setCall] = useState<ICall>({} as ICall);
     const [callAccepted, setCallAccepted] = useState(false);
     const [callEnded, setCallEnded] = useState(false);
-    const [callInfo, setCallInfo] = useState("");
 
     const myVideo = useRef<HTMLMediaElement | undefined>();
     const userVideo = useRef<HTMLMediaElement | undefined>();
@@ -35,6 +37,9 @@ const ContextProvider = ({ children }: TContextProvider) => {
             message,
             userName
         });
+
+    const onCallSent = (cb: (ms: string) => void) =>
+        socket.on(SOCKET_ACTIONS.CALL_SENT, (info) => cb(info));
 
     useEffect(() => {
         //my video obtained current stream
@@ -53,7 +58,7 @@ const ContextProvider = ({ children }: TContextProvider) => {
 
     useEffect(() => {
         //permission to use video and audio
-        if (navigator.mediaDevices) {
+        if (navigator.mediaDevices && isAuth) {
             navigator.mediaDevices
                 .getUserMedia({
                     video: true,
@@ -63,7 +68,9 @@ const ContextProvider = ({ children }: TContextProvider) => {
                     setStream(currentStream);
                 });
         }
+    }, [isAuth]);
 
+    useEffect(() => {
         //get socket id when connection opened
         socket.on(SOCKET_ACTIONS.SOCKET_ID, (id) => setMeetId(id));
 
@@ -72,8 +79,6 @@ const ContextProvider = ({ children }: TContextProvider) => {
                 leaveCall();
             }
         });
-
-        socket.on(SOCKET_ACTIONS.CALL_SENT, (info) => setCallInfo(info));
 
         //get call data from server to create a call
         socket.on(SOCKET_ACTIONS.CALL_USER, ({ from, name: callerName, signal }) => {
@@ -142,6 +147,7 @@ const ContextProvider = ({ children }: TContextProvider) => {
                 joinChat,
                 onChatMessage,
                 sendChatMessage,
+                onCallSent,
                 call,
                 callAccepted,
                 callEnded,
@@ -151,8 +157,7 @@ const ContextProvider = ({ children }: TContextProvider) => {
                 meetId,
                 acceptCall,
                 callUser,
-                leaveCall,
-                callInfo
+                leaveCall
             }}
         >
             {children}

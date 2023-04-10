@@ -6,6 +6,7 @@ import { CopyToClipboard } from "react-copy-to-clipboard";
 import { gray300, gray400 } from "constants/styles/colors";
 import { Copy, Close } from "assets/svgComponents";
 import { openPopup } from "ui/popup";
+import classNames from "classnames";
 
 const Popup = lazy(() => import("ui/popup"));
 
@@ -15,9 +16,9 @@ interface IMeetingModal {
 }
 
 const MeetingModal: FC<IMeetingModal> = ({ meetId, setIsVisible }) => {
-    const closeModal = () => {
+    const closeModal = useCallback(() => {
         setIsVisible(false);
-    };
+    }, [setIsVisible]);
 
     const handleCopyBtnClick = useCallback(() => openPopup("Код встречи скопирован."), []);
 
@@ -25,19 +26,22 @@ const MeetingModal: FC<IMeetingModal> = ({ meetId, setIsVisible }) => {
         <>
             <ClickAwayListener onClickAway={closeModal}>
                 <div
-                    className={`z-10 flex flex-col justify-between p-[20px] absolute h-[230px] w-[360px] top-[50%] left-[50%] translate-x-[-50%] translate-y-[-50%] rounded ${bgGray700} shadow-custom`}
+                    className={classNames(
+                        "z-10 flex flex-col justify-between p-[20px] absolute h-[230px] w-[360px] top-[50%] left-[50%] translate-x-[-50%] translate-y-[-50%] rounded shadow-custom",
+                        bgGray700
+                    )}
                 >
-                    <div className={`flex justify-between`}>
-                        <p className={`${gray300} text-xl`}>Код вашей встречи</p>
+                    <div className={"flex justify-between"}>
+                        <p className={classNames("text-xl", gray300)}>Код вашей встречи</p>
                         <span onClick={closeModal} className={"cursor-pointer"}>
                             <Close size={"24px"} />
                         </span>
                     </div>
-                    <p className={`${gray400}`}>
+                    <p className={gray400}>
                         Скопируйте эту ссылку и поделитесь с теми, кого хотите пригласить. Сохраните
                         ее, если планируете встречу позже.
                     </p>
-                    <div className={`flex gap-[10px]`}>
+                    <div className={"flex gap-[10px]"}>
                         <Input value={meetId} disabled />
                         <CopyToClipboard text={meetId}>
                             <Button onClick={handleCopyBtnClick}>

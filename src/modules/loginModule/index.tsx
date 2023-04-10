@@ -1,8 +1,12 @@
-import { FC, useCallback, useState } from "react";
+import { ChangeEvent, FC, useCallback, useState } from "react";
 import { bgGray800, bgGray400 } from "constants/styles/backgrounds";
 import { Input, Button, ExtraText } from "ui";
 import Label from "./Label";
 import useAuthStore from "store/authStore";
+import classNames from "classnames";
+
+const LOGIN = "login";
+const PASSWORD = "password";
 
 const LoginModule: FC = () => {
     const { login, registration, authErrorStr } = useAuthStore((state) => state);
@@ -31,33 +35,45 @@ const LoginModule: FC = () => {
         }
     }, [loginValue, passwordValue, registration]);
 
+    const handleChangeInputValue = useCallback(
+        (type: typeof LOGIN | typeof PASSWORD) => (e: ChangeEvent<HTMLInputElement>) => {
+            const value = e.target.value;
+            type === LOGIN ? setLoginValue(value) : setPasswordValue(value);
+        },
+        [setLoginValue, setPasswordValue]
+    );
+
     return (
-        <div className={`h-screen w-screen ${bgGray800} flex justify-center items-center`}>
-            <form className={`w-[400px] ${bgGray400} shadow-md rounded px-8 pt-6 pb-8 mb-4`}>
-                <div className="mb-4">
-                    <Label htmlFor={"login"} text={"Имя пользователя"} />
+        <div
+            className={classNames("h-screen w-screen flex justify-center items-center", bgGray800)}
+        >
+            <form
+                className={classNames("w-[400px] shadow-md rounded px-8 pt-6 pb-8 mb-4", bgGray400)}
+            >
+                <div className={"mb-4"}>
+                    <Label htmlFor={LOGIN} text={"Имя пользователя"} />
                     <Input
                         value={loginValue}
-                        onChange={(e) => setLoginValue(e.target.value)}
-                        id={"login"}
+                        onChange={handleChangeInputValue(LOGIN)}
+                        id={LOGIN}
                         type={"text"}
                         placeholder={"Логин"}
-                        className="mb-3"
+                        className={"mb-3"}
                     />
                 </div>
-                <div className="mb-6">
-                    <Label htmlFor={"password"} text={"Пароль"} />
+                <div className={"mb-6"}>
+                    <Label htmlFor={PASSWORD} text={"Пароль"} />
                     <Input
                         value={passwordValue}
-                        onChange={(e) => setPasswordValue(e.target.value)}
-                        id={"password"}
+                        onChange={handleChangeInputValue(PASSWORD)}
+                        id={PASSWORD}
                         type={"password"}
                         placeholder="******************"
-                        className="mb-3"
+                        className={"mb-3"}
                     />
                     {currentErrMsg && <ExtraText text={currentErrMsg} />}
                 </div>
-                <div className="flex items-center justify-between">
+                <div className={"flex items-center justify-between"}>
                     <Button onClick={onLoginClick}>Войти</Button>
                     <Button onClick={onRegistrationClick}>Регистрация</Button>
                 </div>

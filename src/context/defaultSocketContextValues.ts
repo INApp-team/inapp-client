@@ -4,6 +4,7 @@ interface ISocketContext {
     joinChat: (userName: string) => void;
     onChatMessage: (setter: (d: IMsg) => void) => void;
     sendChatMessage: (message: string, userName: string) => void;
+    onCallSent: (cb: (ms: string) => void) => void;
     call: ICall;
     callAccepted: boolean;
     callEnded: boolean;
@@ -14,13 +15,13 @@ interface ISocketContext {
     acceptCall: () => void;
     callUser: (id: string, userName: string) => void;
     leaveCall: () => void;
-    callInfo: string;
 }
 
 export const defaultSocketContextValues: ISocketContext = {
     joinChat: () => {},
     onChatMessage: () => {},
     sendChatMessage: () => {},
+    onCallSent: () => {},
     call: {} as ICall,
     callAccepted: false,
     callEnded: false,
@@ -30,6 +31,5 @@ export const defaultSocketContextValues: ISocketContext = {
     meetId: "",
     acceptCall: () => {},
     callUser: () => {},
-    leaveCall: () => {},
-    callInfo: ""
+    leaveCall: () => {}
 };

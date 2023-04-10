@@ -4,13 +4,14 @@ import ChatModule from "modules/chatModule";
 
 const WebChatsPage: FC = () => {
     return (
-        //calc 100%-header height-footer height
-        <div
-            className={`h-[calc(100%-72px-40px)] w-full flex justify-around items-center gap-[10px]`}
+        <main
+            className={
+                "h-full w-full flex justify-around items-center gap-[10px] pb-[theme(layout.footerHeight)] pt-[theme(layout.headerHeight)]"
+            }
         >
             <VideoChatModule />
             <ChatModule />
-        </div>
+        </main>
     );
 };
 export default WebChatsPage;
