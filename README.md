@@ -1,46 +1,35 @@
-# Getting Started with Create React App
+# INApp-chat
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+Modern chat app based on websockets and simple-peer library.
 
-## Available Scripts
+## Project launch command:
+### `npm install && npm start`
+*Runs the app in the development mode.\
+Open [http://localhost:3000](http://localhost:3000) to view it in the browser.*
 
-In the project directory, you can run:
+## Project usage:
 
-### `npm start`
+1. Project layout with whom you can interact </br>
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+![layout](public/doc/layoutInfo.jpg)
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
+2. Copy your meeting id and send it to shared chat
 
-### `npm test`
+__Your future interlocutor should use your meeting id to call you__
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+![copyMeetingId](public/doc/copyMeetingId.jpg)
 
-### `npm run build`
+3. After other user called - you can accept or decline it 
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+![acceptCall](public/doc/callUser.jpg)
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+4. Congrats! If you accept the call - video connection successfully established
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+*you can see and hear your interlocutor, and also read the subtitles on language you chose*
 
-### `npm run eject`
+![connection](public/doc/functionateApp.jpg)
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+### Project is launched by INApp team. 
+### All rights reserved.
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
-
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
