@@ -41,6 +41,14 @@ const ContextProvider = ({ children }: TContextProvider) => {
     const onCallSent = (cb: (ms: string) => void) =>
         socket.on(SOCKET_ACTIONS.CALL_SENT, (info) => cb(info));
 
+    const onSubtitle = (cb: (s: string) => void) => {
+        socket.on(SOCKET_ACTIONS.SUBTITLE, (data: string) => cb(data));
+    };
+
+    const sendSubtitle = (subtitle: string) => {
+        socket.emit(SOCKET_ACTIONS.SUBTITLE_SENT, subtitle);
+    };
+
     useEffect(() => {
         //my video obtained current stream
         const _myVideo = myVideo.current;
@@ -148,6 +156,8 @@ const ContextProvider = ({ children }: TContextProvider) => {
                 onChatMessage,
                 sendChatMessage,
                 onCallSent,
+                onSubtitle,
+                sendSubtitle,
                 call,
                 callAccepted,
                 callEnded,

@@ -13,7 +13,7 @@ import { borderGray600 } from "constants/styles/borders";
 import { IMsg } from "interfaces";
 import { bgGray700 } from "constants/styles/backgrounds";
 import { useLangStore, useAuthStore } from "store";
-import { translateLanguage, detectLanguage } from "./utils/http";
+import { translateLanguage, detectLanguage } from "http/requests/languages";
 import useAsyncEffect from "hooks/useAsyncEffect";
 import { SocketContext } from "context/SocketContext";
 import { CHAT_MESSAGES } from "constants/localSt";
@@ -36,8 +36,7 @@ const ChatModule = () => {
 
     useEffect(() => {
         messagesEndRef.current?.scrollIntoView({
-            block: "start",
-            behavior: "smooth"
+            block: "start"
         });
     }, [allMessages]);
 
@@ -85,7 +84,7 @@ const ChatModule = () => {
             sendChatMessage(inputValue, user.login);
             setInputValue("");
         },
-        [sendChatMessage, inputValue]
+        [sendChatMessage, inputValue, user]
     );
 
     const handleEnterClick = useCallback(

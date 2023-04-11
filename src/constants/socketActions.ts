@@ -6,5 +6,8 @@ export const SOCKET_ACTIONS = {
     CALL_USER: "callUser",
     ANSWER_CALL: "answerCall",
     CALL_ACCEPTED: "callAccepted",
-    CALL_SENT: "callSent"
+    CALL_SENT: "callSent",
+
+    SUBTITLE_SENT: "sendSubtitle",
+    SUBTITLE: "subtitle"
 };

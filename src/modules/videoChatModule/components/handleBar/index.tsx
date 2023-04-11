@@ -1,12 +1,20 @@
 import { Button, Input } from "ui";
-import { Camera, CameraOff, Microphone, MicrophoneOff, UserAdd } from "assets/svgComponents";
+import {
+    Camera,
+    CameraOff,
+    Microphone,
+    MicrophoneOff,
+    UserAdd,
+    Subtitles
+} from "assets/svgComponents";
 import { ChangeEvent, lazy, Suspense, useCallback, useContext, useEffect, useState } from "react";
 import { SocketContext } from "context/SocketContext";
-import useAuthStore from "store/authStore";
+import { useAuthStore, useSubtitlesStore } from "store";
 import { switchMediaEntity } from "./utils";
 import { AUDIO, VIDEO } from "./constants";
-import { bgGreen400, bgRed400 } from "constants/styles/backgrounds";
+import { bgGreen300, bgGreen400, bgRed300, bgRed400 } from "constants/styles/backgrounds";
 import { openPopup } from "ui/popup";
+import checkSpeechRecognitionAvailable from "utils/checkSpeechRecognitionAvailable";
 
 const Popup = lazy(() => import("ui/popup"));
 const CopyModal = lazy(() => import("./modals/CopyModal"));
@@ -14,6 +22,11 @@ const CallModal = lazy(() => import("./modals/CallModal"));
 
 const HandleBar = () => {
     const userData = useAuthStore((state) => state.user);
+    const { audioOn, setAudioOn, subtitlesOn, setSubtitlesOn } = useSubtitlesStore(
+        (state) => state
+    );
+
+    const speechRecognitionAvailable = checkSpeechRecognitionAvailable();
 
     const {
         meetId,
@@ -35,7 +48,6 @@ const HandleBar = () => {
     const [meetingId, setMeetingId] = useState("");
 
     const [video, setVideo] = useState(true);
-    const [audio, setAudio] = useState(true);
 
     useEffect(() => {
         onCallSent(openPopup);
@@ -59,17 +71,21 @@ const HandleBar = () => {
 
     const handleSwitchVideo = useCallback(() => {
         switchMediaEntity(VIDEO, stream, video, setVideo);
-    }, [switchMediaEntity, stream, video, setVideo]);
+    }, [stream, video, setVideo]);
 
     const handleSwitchAudio = useCallback(() => {
-        switchMediaEntity(AUDIO, stream, audio, setAudio);
-    }, [switchMediaEntity, stream, audio, setAudio]);
+        switchMediaEntity(AUDIO, stream, audioOn, setAudioOn);
+    }, [stream, audioOn, setAudioOn]);
+
+    const handleSwitchSubtitles = useCallback(() => {
+        setSubtitlesOn(!subtitlesOn);
+    }, [subtitlesOn]);
 
     const getSwitchesBtnsStyles = useCallback(
         (entity: boolean) => ({
             backgroundColor: entity ? bgGreen400 : bgRed400,
             className: "!py-1 !px-2",
-            hover: entity ? "hover:bg-green-300" : "hover:bg-red-300"
+            hover: entity ? ["hover:", bgGreen300].join("") : ["hover:", bgRed300].join("")
         }),
         []
     );
@@ -88,9 +104,21 @@ const HandleBar = () => {
                     <Button
                         onClick={handleSwitchAudio}
                         title={"Микрофон"}
-                        {...getSwitchesBtnsStyles(audio)}
+                        {...getSwitchesBtnsStyles(audioOn)}
                     >
-                        {audio ? <Microphone /> : <MicrophoneOff />}
+                        {audioOn ? <Microphone /> : <MicrophoneOff />}
+                    </Button>
+                    <Button
+                        disabled={!speechRecognitionAvailable}
+                        onClick={handleSwitchSubtitles}
+                        title={
+                            speechRecognitionAvailable
+                                ? "Субтитры"
+                                : "Данный браузер не поддерживает субтитры"
+                        }
+                        {...getSwitchesBtnsStyles(subtitlesOn)}
+                    >
+                        <Subtitles />
                     </Button>
                 </div>
                 <div className={"flex flex-row gap-[10px] w-fit"}>
@@ -105,7 +133,7 @@ const HandleBar = () => {
                         disabled={activeCallFlag}
                         onChange={handleSetMeetingId}
                         placeholder={"Введите код встречи"}
-                        className={"w-[260px]"}
+                        className={"!w-[260px]"}
                     />
                     {activeCallFlag ? (
                         <Button onClick={leaveCall}>Сбросить</Button>

@@ -10,5 +10,9 @@ export const bgBlue600 = "bg-blue-600";
 export const bgGreen500 = "bg-green-500";
 export const bgGreen400 = "bg-green-400";
 
+export const bgGreen300 = "bg-green-300";
+
 export const bgRed500 = "bg-red-500";
 export const bgRed400 = "bg-red-400";
+
+export const bgRed300 = "bg-red-300";
