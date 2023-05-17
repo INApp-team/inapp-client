@@ -1,9 +1,8 @@
 import axios from "axios";
 import { IAuthResponse } from "interfaces";
-import { API_URL } from "./urls";
 
 const $api = axios.create({
-    baseURL: API_URL
+    baseURL: process.env.REACT_APP_API_URL
 });
 
 $api.interceptors.request.use((config) => {
@@ -20,10 +19,11 @@ $api.interceptors.response.use(
         if (error.response.status === 401 && originalReq && !originalReq._isRetry) {
             originalReq._isRetry = true;
             try {
-                const response = await axios.get<IAuthResponse>(`${API_URL}/refresh`, {});
+                const response = await axios.get<IAuthResponse>(`${process.env.REACT_APP_API_URL}/refresh`, {});
                 localStorage.setItem("token", response.data.accessToken);
                 return $api.request(originalReq);
             } catch (e) {
+                console.log(e)
                 console.log(e, "Auth error");
             }
         }

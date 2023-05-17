@@ -2,12 +2,11 @@ import { createContext, useEffect, useRef, useState } from "react";
 import Peer from "simple-peer";
 import * as io from "socket.io-client";
 import { ICall, IMsg } from "interfaces";
-import { SOCKET_URL } from "http/urls";
 import { defaultSocketContextValues } from "./defaultSocketContextValues";
 import { SOCKET_ACTIONS } from "constants/socketActions";
 import useAuthStore from "../store/authStore";
 
-const socket = io.connect(SOCKET_URL);
+const socket = io.connect(process.env.REACT_APP_SOCKET_URL as string);
 
 export const SocketContext = createContext(defaultSocketContextValues);
 

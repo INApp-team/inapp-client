@@ -6,6 +6,7 @@ import { bgGray300, bgGray700 } from "constants/styles/backgrounds";
 import { useSubtitlesStore, useLangStore } from "store";
 import { detectLanguage, translateLanguage } from "http/requests/languages";
 import useAsyncEffect from "hooks/useAsyncEffect";
+import checkSpeechRecognitionAvailable from "utils/checkSpeechRecognitionAvailable";
 
 const VideoPlayer: FC = () => {
     const { myVideo, userVideo, stream, callAccepted, callEnded, onSubtitle, sendSubtitle } =
@@ -36,25 +37,26 @@ const VideoPlayer: FC = () => {
 
     useEffect(() => {
         const listened = audioOn && userVideoFlag;
+        if (checkSpeechRecognitionAvailable()) {
+            window.SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+            const recognition = new SpeechRecognition();
+            recognition.continuous = true;
 
-        window.SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-        const recognition = new SpeechRecognition();
-        recognition.continuous = true;
+            const resultListener = async (e: SpeechRecognitionEvent) => {
+                const resultArr = e.results || [];
+                sendSubtitle(resultArr[resultArr.length - 1]?.[0]?.transcript);
+            };
 
-        const resultListener = async (e: SpeechRecognitionEvent) => {
-            const resultArr = e.results || [];
-            sendSubtitle(resultArr[resultArr.length - 1]?.[0]?.transcript);
-        };
+            if (listened) {
+                recognition.addEventListener("result", resultListener);
+                recognition.start();
+            } else {
+                recognition.removeEventListener("result", resultListener);
+                recognition.stop();
+            }
 
-        if (listened) {
-            recognition.addEventListener("result", resultListener);
-            recognition.start();
-        } else {
-            recognition.removeEventListener("result", resultListener);
-            recognition.stop();
+            return () => recognition.removeEventListener("result", resultListener);
         }
-
-        return () => recognition.removeEventListener("result", resultListener);
     }, [userVideoFlag, audioOn]);
 
     return (

@@ -1,7 +1,6 @@
 import { IAuthResponse, IUser } from "interfaces";
 import axios from "axios";
 import $api from "../http";
-import { API_URL } from "http/urls";
 import { TOKEN } from "constants/localSt";
 
 import { create } from "zustand";
@@ -79,9 +78,12 @@ const useAuthStore = create<IUseAuthStore>()(
             checkAuth: async () => {
                 set({ isLoading: true });
                 try {
-                    const response = await axios.get<IAuthResponse>(`${API_URL}/refresh`, {
-                        withCredentials: true
-                    });
+                    const response = await axios.get<IAuthResponse>(
+                        `${process.env.REACT_APP_API_URL}/refresh`,
+                        {
+                            withCredentials: true
+                        }
+                    );
                     localStorage.setItem(TOKEN, response.data.accessToken);
                     set({ isAuth: true });
                     set({ user: response.data.user });

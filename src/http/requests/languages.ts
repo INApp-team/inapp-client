@@ -1,7 +1,7 @@
-import axios from "axios";
+import $api from "../index";
 
 export const translateLanguage = async (text: string, targetLang: string) => {
-    const translatedText = axios.post<string>("http://localhost:5200/translate", {
+    const translatedText = $api.post<string>(`${process.env.REACT_APP_API_URL}/translate`, {
         text,
         targetLang
     });
@@ -10,7 +10,7 @@ export const translateLanguage = async (text: string, targetLang: string) => {
 };
 
 export const detectLanguage = async (text: string) => {
-    const detectedText = axios.post<string>("http://localhost:5200/detectLanguage", {
+    const detectedText = $api.post<string>(`${process.env.REACT_APP_API_URL}/detectLanguage`, {
         text
     });
 
