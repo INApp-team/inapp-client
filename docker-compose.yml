@@ -1,6 +1,6 @@
 version: '3'
 services:
-  translation:
+  client:
     image: client
     build:
       context: .
